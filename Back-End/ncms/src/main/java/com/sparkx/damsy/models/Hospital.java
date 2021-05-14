@@ -14,10 +14,31 @@ public class Hospital {
     public Hospital() {
     }
 
+    /**
+     * 
+     * @param id
+     */
     public Hospital(String id) {
         this.id = id;
     }
 
+    /**
+     * 
+     * @param id
+     * @param name
+     * @param locationX
+     * @param locationY
+     * @param buildDate
+     */
+    public Hospital(String id, String name, int locationX, int locationY, Date buildDate) {
+        this.id = id;
+        this.name = name;
+        this.locationX = locationX;
+        this.locationY = locationY;
+        this.buildDate = buildDate;
+    }
+
+    
     public String getId() {
         return id;
     }
