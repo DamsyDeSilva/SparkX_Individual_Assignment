@@ -2,6 +2,9 @@ package com.sparkx.damsy.models;
 
 import java.util.Date;
 
+import com.sparkx.damsy.enums.PatientStatus;
+import com.sparkx.damsy.enums.SeverityLevel;
+
 public class Patient{
     
     private String id;
@@ -10,7 +13,7 @@ public class Patient{
     private int district;
     private int locationX;
     private int locationY;
-    private String severityLevel;
+    private SeverityLevel severityLevel;
     private String gender;
     private String contact;
     private String email;
@@ -21,7 +24,7 @@ public class Patient{
     private String dischargedBy;
     private String hospitalId;
     private int bedNo;
-    private String status;
+    private PatientStatus status;
     
     
     public Patient() {
@@ -40,7 +43,7 @@ public class Patient{
      * @param id
      * @param status
      */
-    public Patient(String id, String status) {
+    public Patient(String id, PatientStatus status) {
         this.id = id;
         this.status = status;
     }
@@ -93,11 +96,11 @@ public class Patient{
         this.locationY = locationY;
     }
 
-    public String getSeverityLevel() {
+    public SeverityLevel getSeverityLevel() {
         return severityLevel;
     }
 
-    public void setSeverityLevel(String severityLevel) {
+    public void setSeverityLevel(SeverityLevel severityLevel) {
         this.severityLevel = severityLevel;
     }
 
@@ -181,11 +184,11 @@ public class Patient{
         this.bedNo = bedNo;
     }
 
-    public String getStatus() {
+    public PatientStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PatientStatus status) {
         this.status = status;
     }
 

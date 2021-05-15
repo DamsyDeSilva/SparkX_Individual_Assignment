@@ -1,5 +1,7 @@
 package com.sparkx.damsy.models;
 
+import com.sparkx.damsy.enums.Role;
+
 public class Doctor extends User{
 
     private String hospitalId;
@@ -10,7 +12,7 @@ public class Doctor extends User{
      * @param hospitalId
      */
     public Doctor(String username, String hospitalId) {
-        super(username, "Doctor");  
+        super(username, Role.DOCTOR);  
         this.hospitalId = hospitalId;
     }
 

@@ -1,12 +1,13 @@
 package com.sparkx.damsy.models;
 
+import com.sparkx.damsy.enums.Role;
+
 public class User {
 
     private String userName;    
     private String firstName;
     private String lastName;
-    private String role;
-    
+    private Role role;
     
 
     public User() {
@@ -25,7 +26,7 @@ public class User {
      * @param userName
      * @param role
      */
-    public User(String userName, String role) {
+    public User(String userName, Role role) {
         this.userName = userName;
         this.role = role;
     }
@@ -55,11 +56,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
  
