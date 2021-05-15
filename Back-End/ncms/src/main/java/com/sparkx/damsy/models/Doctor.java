@@ -4,24 +4,23 @@ import com.sparkx.damsy.enums.Role;
 
 public class Doctor extends User{
 
-    private String hospitalId;
+    /**
+     * 
+     * @param userName
+     * @param password
+     * @param firstName
+     * @param lastName
+     * @param hospitalID
+     */
+    public Doctor(String userName, String password, String firstName, String lastName, String hospitalID) {
+        super(userName, password, firstName, lastName, hospitalID, Role.DOCTOR);
+    } 
 
     /**
      * 
      * @param username
-     * @param hospitalId
      */
-    public Doctor(String username, String hospitalId) {
-        super(username, Role.DOCTOR);  
-        this.hospitalId = hospitalId;
+    public Doctor(String username) {
+        super(username, Role.DOCTOR);
     }
-
-    public String getHospitalId() {
-        return hospitalId;
-    }
-
-    public void setHospitalId(String hospitalId) {
-        this.hospitalId = hospitalId;
-    }
- 
 }
