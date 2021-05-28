@@ -8,8 +8,8 @@ public class Database {
 
     private final static String url = "jdbc:mysql://localhost:3306/ncms";
     private final static String user = "root";
-    private final static String password = "root@123";
-    private final static String driver = "com.mysql.jdbc.Driver";
+    private final static String password = "";
+    private final static String driver = "com.mysql.cj.jdbc.Driver";
 
     /**
      * Initiates Database connection

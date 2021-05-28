@@ -1,9 +1,5 @@
 package com.sparkx.damsy.models;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
-import com.sparkx.damsy.connections.Database;
 import com.sparkx.damsy.enums.Role;
 
 public class User {
@@ -109,35 +105,4 @@ public class User {
     public void setHospitalID(String hospitalID) {
         this.hospitalID = hospitalID;
     }
-    
- 
-    /**
-     * Register User in Database
-     * @param user
-     */
-    public void registerUser() {
-
-        String SQL_INSERT_QUERY = "Insert into user(username,password,first_name,last_name,hospital_id,role) values(?,?,?,?,?,?)";
-
-        try {
-            Connection connection = Database.openConnection();
-            PreparedStatement statement;
-            statement = connection.prepareStatement(SQL_INSERT_QUERY);
-            statement.setString(1, this.userName);
-            statement.setString(2, this.password);
-            statement.setString(3, this.firstName);
-            statement.setString(4, this.lastName);
-            statement.setString(5, this.hospitalID);
-            statement.setString(6, this.role.toString());
-
-            System.out.println(statement);
-
-            statement.executeUpdate();
-            connection.close();
-
-        } catch (Exception exception) {
-            System.out.println(exception);
-        }
-    }
-    
 }
