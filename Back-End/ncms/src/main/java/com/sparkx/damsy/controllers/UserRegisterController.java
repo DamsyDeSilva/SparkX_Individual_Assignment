@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import com.sparkx.damsy.repository.UserRepository;
 import com.sparkx.damsy.service.UserService;
 import com.sparkx.damsy.utils.Http;
 
+@WebServlet
 public class UserRegisterController extends HttpServlet {
     
     String message = "";

@@ -3,7 +3,8 @@ package com.sparkx.damsy.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import com.sparkx.damsy.connections.Database;
+import com.sparkx.damsy.connections.DBConnectionPool;
+// import com.sparkx.damsy.connections.Database;
 import com.sparkx.damsy.models.User;
 
 public class UserRepository {
@@ -16,9 +17,13 @@ public class UserRepository {
      */
     public static void insertIntoUser(User user) {
 
+        Connection connection = null;
+        PreparedStatement statement = null;
+
         try {
-            Connection connection = Database.openConnection();
-            PreparedStatement statement;
+            // Connection connection = Database.openConnection();
+            connection = DBConnectionPool.getInstance().getConnection();
+            // PreparedStatement statement;
             statement = connection.prepareStatement(SQL_INSERT_QUERY);
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getPassword());
@@ -30,10 +35,16 @@ public class UserRepository {
             System.out.println(statement);
 
             statement.executeUpdate();
-            connection.close();
+            // connection.close();
 
         } catch (Exception exception) {
             System.out.println(exception);
+        }
+        finally
+        {
+            // DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
         }
     }
 }
