@@ -29,15 +29,12 @@ public class Hospital {
      * @param name
      * @param locationX
      * @param locationY
-     * @param buildDate
      */
-    public Hospital(String id, String name, int locationX, int locationY, Date buildDate) {
+    public Hospital(String id, String name, int locationX, int locationY) {
         this.id = id;
         this.name = name;
         this.locationX = locationX;
         this.locationY = locationY;
-        this.buildDate = buildDate;
-        this.availBeds = 10;
     }
 
     

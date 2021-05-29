@@ -46,7 +46,7 @@ public class UserRepository {
             DBConnectionPool.getInstance().close(connection);
         }
 
-        // if unsert into is successful return true
+        // if insert into is successful return true
         if (result > 0){
             return true;
         }else{
