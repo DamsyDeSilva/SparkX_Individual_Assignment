@@ -4,7 +4,7 @@ import com.sparkx.damsy.enums.Role;
 
 public class User {
 
-    private String userName;   
+    private String username;   
     private String password; 
     private String firstName;
     private String lastName;
@@ -21,8 +21,8 @@ public class User {
      * @param userName
      * @param role
      */
-    public User(String userName, Role role) {
-        this.userName = userName;
+    public User(String username, Role role) {
+        this.username = username;
         this.role = role;
     }
 
@@ -33,8 +33,8 @@ public class User {
      * @param firstName
      * @param lastName
      */
-    public User(String userName, String password, String firstName, String lastName, String hospitalID) {
-        this.userName = userName;
+    public User(String username, String password, String firstName, String lastName, String hospitalID) {
+        this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,8 +49,8 @@ public class User {
      * @param lastName
      * @param role
      */
-    public User(String userName, String password, String firstName, String lastName, String hospitalID, Role role) {
-        this.userName = userName;
+    public User(String username, String password, String firstName, String lastName, String hospitalID, Role role) {
+        this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -59,11 +59,11 @@ public class User {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getFirstName() {

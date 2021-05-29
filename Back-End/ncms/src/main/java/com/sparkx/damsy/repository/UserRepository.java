@@ -15,10 +15,11 @@ public class UserRepository {
      * Register User in Database
      * @param user
      */
-    public static void insertIntoUser(User user) {
+    public static boolean insertIntoUser(User user) {
 
         Connection connection = null;
         PreparedStatement statement = null;
+        int result = 0;
 
         try {
             // Connection connection = Database.openConnection();
@@ -34,17 +35,22 @@ public class UserRepository {
 
             System.out.println(statement);
 
-            statement.executeUpdate();
-            // connection.close();
+            result = statement.executeUpdate();
 
         } catch (Exception exception) {
             System.out.println(exception);
         }
         finally
         {
-            // DBConnectionPool.getInstance().close(rs);
             DBConnectionPool.getInstance().close(statement);
             DBConnectionPool.getInstance().close(connection);
+        }
+
+        // if unsert into is successful return true
+        if (result > 0){
+            return true;
+        }else{
+            return false;
         }
     }
 }

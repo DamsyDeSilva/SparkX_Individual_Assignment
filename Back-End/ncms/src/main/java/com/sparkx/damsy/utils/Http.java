@@ -5,7 +5,6 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 
 public class Http {
     /**
@@ -30,21 +29,4 @@ public class Http {
         }
     }
 
-
-    /**
-     * Create json string from hospital object
-     * @param hospital
-     * @return
-     */
-    public static String jsonSerialize(Object object) {
-        if (object == null) return null;
-        Gson gson = new Gson();
-        String json = null;
-        try{
-            json = gson.toJson(object);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
 }

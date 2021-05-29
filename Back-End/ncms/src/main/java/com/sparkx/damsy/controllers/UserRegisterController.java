@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sparkx.damsy.enums.Role;
 import com.sparkx.damsy.models.User;
 import com.sparkx.damsy.repository.UserRepository;
-import com.sparkx.damsy.service.UserService;
 import com.sparkx.damsy.utils.Http;
+import com.sparkx.damsy.utils.JsonFunctions;
 
 @WebServlet(name = "UserRegisterController")
 public class UserRegisterController extends HttpServlet {
@@ -38,13 +39,30 @@ public class UserRegisterController extends HttpServlet {
 
         String jsonPayload = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         System.out.println(jsonPayload);
-        User user = UserService.createUserFromJson(jsonPayload);
+        User user = (User) JsonFunctions.jsonDeserialize(jsonPayload, "user");
         
-        if (user != null){
-            UserRepository.insertIntoUser(user);
-            Http.outputResponse(resp, null, HttpServletResponse.SC_OK);
+        if (user == null){
+            Http.outputResponse(resp, "Bad request",  HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        Http.outputResponse(resp, null,  HttpServletResponse.SC_BAD_REQUEST);
+
+        if (!user.getUserName().isEmpty() && !user.getFirstName().isEmpty() && !user.getPassword().isEmpty()) {
+            if (user.getRole() == Role.USER || user.getRole() == Role.DOCTOR || user.getRole() == Role.MOH) {
+                if (UserRepository.insertIntoUser(user)){
+                    Http.outputResponse(resp, "User Created", HttpServletResponse.SC_CREATED);
+                    return;
+                }else{
+                    Http.outputResponse(resp, "Data insertion failed", HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+                
+            } else {
+                Http.outputResponse(resp, "Invalid Role Type", HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+        }else{
+            Http.outputResponse(resp, "Invalid Data", HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
     }
 }
