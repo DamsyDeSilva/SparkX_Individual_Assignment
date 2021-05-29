@@ -10,6 +10,7 @@ public class Hospital {
     private int locationX;
     private int locationY;
     private Date buildDate;
+    private int availBeds;
     
     public Hospital() {
     }
@@ -36,6 +37,7 @@ public class Hospital {
         this.locationX = locationX;
         this.locationY = locationY;
         this.buildDate = buildDate;
+        this.availBeds = 10;
     }
 
     
@@ -85,6 +87,14 @@ public class Hospital {
 
     public void setBuildDate(Date buildDate) {
         this.buildDate = buildDate;
+    }
+
+    public int getAvailBeds() {
+        return availBeds;
+    }
+
+    public void setAvailBeds(int availBeds) {
+        this.availBeds = availBeds;
     } 
 
 }
