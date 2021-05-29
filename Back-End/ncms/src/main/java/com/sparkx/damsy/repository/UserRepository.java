@@ -9,7 +9,7 @@ import com.sparkx.damsy.models.User;
 
 public class UserRepository {
 
-    static String SQL_INSERT_QUERY = "Insert into user(username,password,first_name,last_name,hospital_id,role) values(?,?,?,?,?,?)";
+    private static String SQL_INSERT_QUERY = "Insert into user(username,password,first_name,last_name,hospital_id,role) values(?,?,?,?,?,?)";
     
     /**
      * Register User in Database

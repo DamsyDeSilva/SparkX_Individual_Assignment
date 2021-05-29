@@ -8,12 +8,12 @@ import com.sparkx.damsy.models.User;
 public class UserService {
     
     /**
-     * Create User from JsonPayload
+     * Create User object from JsonPayload string
      * 
      * @param jsonPayload
      * @return
      */
-    public static User createUser(String jsonPayload) {
+    public static User createUserFromJson(String jsonPayload) {
         if (jsonPayload == null)
             return null;
 

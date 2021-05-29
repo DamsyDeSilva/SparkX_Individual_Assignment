@@ -10,9 +10,19 @@
     <servlet-class>com.sparkx.damsy.controllers.UserRegisterController</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>HospitalController</servlet-name>
+    <servlet-class>com.sparkx.damsy.controllers.HospitalController</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>UserRegisterController</servlet-name>
     <url-pattern>/register</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>HospitalController</servlet-name>
+    <url-pattern>/hospital</url-pattern>
   </servlet-mapping>
 
 </web-app>

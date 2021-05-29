@@ -15,7 +15,7 @@ import com.sparkx.damsy.repository.UserRepository;
 import com.sparkx.damsy.service.UserService;
 import com.sparkx.damsy.utils.Http;
 
-@WebServlet
+@WebServlet(name = "UserRegisterController")
 public class UserRegisterController extends HttpServlet {
     
     String message = "";
@@ -36,18 +36,15 @@ public class UserRegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String reqBody = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        System.out.println(reqBody);
-        int resCode;
-        User user = UserService.createUser(reqBody);
+        String jsonPayload = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        System.out.println(jsonPayload);
+        User user = UserService.createUserFromJson(jsonPayload);
         
         if (user != null){
             UserRepository.insertIntoUser(user);
-            resCode = HttpServletResponse.SC_OK;
-            Http.outputResponse(resp, null, resCode);
+            Http.outputResponse(resp, null, HttpServletResponse.SC_OK);
             return;
         }
-        resCode = HttpServletResponse.SC_BAD_REQUEST;
-        Http.outputResponse(resp, null, resCode);
+        Http.outputResponse(resp, null,  HttpServletResponse.SC_BAD_REQUEST);
     }
 }
