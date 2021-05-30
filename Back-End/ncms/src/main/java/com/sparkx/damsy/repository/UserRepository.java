@@ -2,6 +2,7 @@ package com.sparkx.damsy.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Base64;
 
 import com.sparkx.damsy.connections.DBConnectionPool;
@@ -11,7 +12,8 @@ import com.sparkx.damsy.models.User;
 public class UserRepository {
 
     private static String SQL_INSERT_QUERY = "Insert into user(username,password,first_name,last_name,hospital_id,role) values(?,?,?,?,?,?)";
-    
+    private static String LOGIN_VALIDATE_QUERY = "SELECT Count(*) as count, role FROM user WHERE username=? and password=? ";
+
     /**
      * Register User in Database
      * @param user
@@ -54,4 +56,49 @@ public class UserRepository {
             return false;
         }
     }
+
+    /**
+     * Validate user using username and password
+     * @param username
+     * @param password
+     * @return
+     */
+    public static boolean validateUserLogin(String username, String password) {
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        int count = 0;
+
+        try {
+            
+            connection = DBConnectionPool.getInstance().getConnection();
+           
+            statement = connection.prepareStatement(LOGIN_VALIDATE_QUERY);
+            statement.setString(1, username);
+            statement.setString(2, Base64.getEncoder().encodeToString(password.getBytes()));
+
+            System.out.println(statement);
+
+            resultSet = statement.executeQuery();
+            resultSet.next();
+            count = resultSet.getInt("count");
+            
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        finally
+        {
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
+        }
+
+        // count = 1 when there exist only one matching pair of username and password 
+        if (count == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

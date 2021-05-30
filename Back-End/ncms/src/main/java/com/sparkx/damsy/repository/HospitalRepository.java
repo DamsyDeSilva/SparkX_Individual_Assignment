@@ -12,7 +12,7 @@ public class HospitalRepository {
 
     private static String GET_HOSPITAL_BY_ID_QUERY = "SELECT * FROM hospital WHERE id = ? LIMIT 1";
     private static String INSERT_HOSPITAL_QUERY = "Insert into hospital(id, name, district, location_x, location_y, build_date, avail_beds) values(?,?,?,?,?,?,?)";
-    private static String COUNT_ALL_HOSPITAL_QUERY = "SELECT COUNT(*) " + "FROM hospital";
+    private static String COUNT_ALL_HOSPITAL_QUERY = "SELECT COUNT(*) FROM hospital";
 
     /**
      * load hospital data fro database according to hospital id
