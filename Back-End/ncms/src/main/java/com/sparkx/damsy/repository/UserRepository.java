@@ -2,6 +2,7 @@ package com.sparkx.damsy.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Base64;
 
 import com.sparkx.damsy.connections.DBConnectionPool;
 // import com.sparkx.damsy.connections.Database;
@@ -27,7 +28,7 @@ public class UserRepository {
             // PreparedStatement statement;
             statement = connection.prepareStatement(SQL_INSERT_QUERY);
             statement.setString(1, user.getUserName());
-            statement.setString(2, user.getPassword());
+            statement.setString(2, Base64.getEncoder().encodeToString(user.getPassword().getBytes()));
             statement.setString(3, user.getFirstName());
             statement.setString(4, user.getLastName());
             statement.setString(5, user.getHospitalID());
