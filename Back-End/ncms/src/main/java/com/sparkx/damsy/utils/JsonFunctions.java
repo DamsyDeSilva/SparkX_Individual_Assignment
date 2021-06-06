@@ -3,6 +3,7 @@ package com.sparkx.damsy.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sparkx.damsy.models.Hospital;
+import com.sparkx.damsy.models.Patient;
 import com.sparkx.damsy.models.User;
 
 public class JsonFunctions {
@@ -41,10 +42,15 @@ public class JsonFunctions {
                 case "user":
                     User user = (User) gson.fromJson(jsonPayload, User.class);
                     return user;
-                
+        
                 case "hospital":
                     Hospital hospital = (Hospital) gson.fromJson(jsonPayload, Hospital.class);
                     return hospital;
+
+                case "patient":
+                    Patient patient = (Patient) gson.fromJson(jsonPayload, Patient.class);
+                    return patient;
+                    
                 default:
                     break;
             }

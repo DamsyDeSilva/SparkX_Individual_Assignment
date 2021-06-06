@@ -10,7 +10,7 @@ public class Patient{
     private String id;
     private String firstName;
     private String lastName;
-    private int district;
+    private String district;
     private int locationX;
     private int locationY;
     private SeverityLevel severityLevel;
@@ -72,11 +72,11 @@ public class Patient{
         this.lastName = lastName;
     }
 
-    public int getDistrict() {
+    public String getDistrict() {
         return district;
     }
 
-    public void setDistrict(int district) {
+    public void setDistrict(String district) {
         this.district = district;
     }
 
