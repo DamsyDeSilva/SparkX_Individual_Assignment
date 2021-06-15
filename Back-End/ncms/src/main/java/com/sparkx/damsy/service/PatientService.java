@@ -2,7 +2,7 @@ package com.sparkx.damsy.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import com.sparkx.damsy.models.Hospital;
 import com.sparkx.damsy.models.Patient;
@@ -16,17 +16,17 @@ public class PatientService {
      * @param patient
      * @return
      */
-    public static Object getAvailbleHospital(Patient patient) {
+    public static String getAvailbleHospital(Patient patient) {
 
-        HashMap<Hospital, Double> hospitalDistHashMap = new HashMap<Hospital, Double>();
+        HashMap<String, Double> hospitalDistHashMap = new HashMap<String, Double>();
         ArrayList<Hospital> hospitalList = HospitalRepository.getHospitalList();
-
+        
         for (int i = 0; i < hospitalList.size(); i++) {
             Hospital hospital = hospitalList.get(i);
 
             if (hospital.getAvailBeds() > 0) {
                 double distance = HospitalService.getDistanceToPatient(hospital, patient);
-                hospitalDistHashMap.put(hospital, distance);
+                hospitalDistHashMap.put(hospital.getId(), distance);
             }
         }
 
@@ -34,15 +34,16 @@ public class PatientService {
             return "NO BEDS ARE AVAILABLE";
         }
 
-        Map.Entry<Hospital, Double> minDist = null;
-        for (Map.Entry<Hospital, Double> entry : hospitalDistHashMap.entrySet()) {
-            if (minDist.getValue() > entry.getValue()|| minDist == null) {
-                minDist = entry;
+        String returnHospitalId;
+
+        Entry<String, Double> min = null;
+        for (Entry<String, Double> entry : hospitalDistHashMap.entrySet()) {
+            if (min == null || min.getValue() > entry.getValue()) {
+                min = entry;
             }
         }
-        // return the hospital object
-        return minDist.getKey();
-    }
+        returnHospitalId = min.getKey();
   
-    
+        return returnHospitalId;
+    }
 }

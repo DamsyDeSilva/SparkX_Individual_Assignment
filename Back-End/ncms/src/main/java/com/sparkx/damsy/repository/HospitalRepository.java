@@ -179,7 +179,7 @@ public class HospitalRepository {
      * Return the available bed no for a hospital
      * @return
      */
-    public static int getAvailabelBedNo(Hospital hospital){
+    public static int getAvailabelBedNo(String hospitalId){
         
         ResultSet resultSet = null;
         Connection connection = null;
@@ -190,7 +190,7 @@ public class HospitalRepository {
         try {
             connection = DBConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(GET_AVAILABLE_BEDS);
-            statement.setString(1, hospital.getId());
+            statement.setString(1, hospitalId);
             resultSet = statement.executeQuery();
             resultSet.next();
             bedNo = 11 - resultSet.getInt(1);   // result is available beds count
