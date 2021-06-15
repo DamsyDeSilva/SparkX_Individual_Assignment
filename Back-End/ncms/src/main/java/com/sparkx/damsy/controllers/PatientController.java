@@ -15,9 +15,12 @@ import com.google.gson.JsonObject;
 import com.sparkx.damsy.models.Patient;
 import com.sparkx.damsy.repository.HospitalRepository;
 import com.sparkx.damsy.repository.PatientRepository;
+import com.sparkx.damsy.repository.QueueRepository;
 import com.sparkx.damsy.service.PatientService;
 import com.sparkx.damsy.utils.Http;
 import com.sparkx.damsy.utils.JsonFunctions;
+
+import com.sparkx.damsy.models.PatientQueue;
 
 @WebServlet(name = "Patient", value = "/patient")
 public class PatientController extends HttpServlet {
@@ -53,7 +56,19 @@ public class PatientController extends HttpServlet {
             
             if(hospital_id.equals("NO BEDS ARE AVAILABLE")){
                 // --> add to queue 
-                Http.outputResponse(resp, "Should add to queue", HttpServletResponse.SC_OK);
+                int nextQueueId = QueueRepository.getCountQueue() + 1;
+                PatientQueue queue = new PatientQueue(nextQueueId, patient.getId());
+                if(QueueRepository.insertIntoQueue(queue, patient)){
+                    // data to be send to patient
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("SerialId", patient.getId());
+                    jsonObject.addProperty("QueueNumber", queue.getId());
+
+                    Http.outputResponse(resp, JsonFunctions.jsonSerialize(jsonObject), HttpServletResponse.SC_CREATED);
+                    return;
+                }
+
+                Http.outputResponse(resp, "Queue Insertion failed, no hospital allocated", HttpServletResponse.SC_OK);
                 return;
             }
 
@@ -80,7 +95,7 @@ public class PatientController extends HttpServlet {
                 return;
                             
             }else{
-                Http.outputResponse(resp, "Data insertion failed ", HttpServletResponse.SC_CREATED);
+                Http.outputResponse(resp, "Data insertion failed ", HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
         }

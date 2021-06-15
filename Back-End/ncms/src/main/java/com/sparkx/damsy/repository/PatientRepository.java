@@ -8,7 +8,7 @@ import com.sparkx.damsy.models.Patient;
 
 public class PatientRepository {
 
-    private static String INITIAL_INSERT_PATIENT_QUERY = "INSERT INTO patient(id, first_name, last_name, district, location_x, location_y, gender, contact, email, age, hospital_id, bed_no) values(?,?,?,?,?,?,?,?,?,?,?,?);";
+    private static String INSERT_PATIENT_WITH_HOSP_BED_QUERY = "INSERT INTO patient(id, first_name, last_name, district, location_x, location_y, gender, contact, email, age, hospital_id, bed_no) values(?,?,?,?,?,?,?,?,?,?,?,?);";
     private static String UPDATE_HOSPITAL_BED_DETAILS_QUERY = "UPDATE patient SET hospital_id = ?, bed_no = ?  WHERE id = ?;";
     private static String DECREMENT_OF_AVAIL_BEDS_QUERY = "UPDATE hospital SET avail_beds = avail_beds-1 WHERE id = ? AND avail_beds > 0;";
 
@@ -29,7 +29,7 @@ public class PatientRepository {
 
             connection = DBConnectionPool.getInstance().getConnection();
 
-            patientStatement = connection.prepareStatement(INITIAL_INSERT_PATIENT_QUERY);
+            patientStatement = connection.prepareStatement(INSERT_PATIENT_WITH_HOSP_BED_QUERY);
             hospitalStatement = connection.prepareStatement(DECREMENT_OF_AVAIL_BEDS_QUERY);
 
             patientStatement.setString(1, patient.getId());
