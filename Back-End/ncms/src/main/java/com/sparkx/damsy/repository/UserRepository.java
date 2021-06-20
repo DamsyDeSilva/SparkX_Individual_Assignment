@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.Base64;
 
 import com.sparkx.damsy.connections.DBConnectionPool;
+import com.sparkx.damsy.enums.Role;
 // import com.sparkx.damsy.connections.Database;
 import com.sparkx.damsy.models.User;
 
@@ -13,6 +14,7 @@ public class UserRepository {
 
     private static String SQL_INSERT_QUERY = "Insert into user(username,password,first_name,last_name,hospital_id,role) values(?,?,?,?,?,?)";
     private static String LOGIN_VALIDATE_QUERY = "SELECT Count(*) as count, role FROM user WHERE username=? and password=? ";
+    private static String GET_USER_BY_USERNAME_QUERY = "SELECT * FROM user WHERE username=? LIMIT 1";
 
     /**
      * Register User in Database
@@ -101,4 +103,49 @@ public class UserRepository {
         }
     }
 
+    /**
+     *  Load User data when username is given
+     * @param userName
+     * @return
+     */
+    public static User LoadUserFromDB(String userName){
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        User user = new User();
+        user.setUserName(userName);
+
+        try {
+            
+            connection = DBConnectionPool.getInstance().getConnection();
+            
+            statement = connection.prepareStatement(GET_USER_BY_USERNAME_QUERY);
+            statement.setString(1, userName);
+
+            System.out.println(statement);
+
+            resultSet = statement.executeQuery();
+            // resultSet.next();
+            while (resultSet.next()) {
+                user.setFirstName(resultSet.getString("first_name"));
+                user.setLastName(resultSet.getString("last_name"));
+                user.setHospitalID(resultSet.getString("hospital_id"));
+                user.setRole((Role.valueOf(resultSet.getString("role"))));
+            }
+
+            return user;
+            
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        finally
+        {
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
+        }
+
+        return null;  
+    }
 }
