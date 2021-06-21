@@ -13,6 +13,8 @@ public class PatientRepository {
     private static String UPDATE_HOSPITAL_BED_DETAILS_QUERY = "UPDATE patient SET hospital_id = ?, bed_no = ?  WHERE id = ?;";
     private static String DECREMENT_OF_AVAIL_BEDS_QUERY = "UPDATE hospital SET avail_beds = avail_beds-1 WHERE id = ? AND avail_beds > 0;";
     private static String INSERT_PATIENT_ADDMISSION = "UPDATE patient SET severity_level = ?, admit_date = ?, admitted_by = ? WHERE id = ?;";
+    private static String INSERT_PATIENT_DISCHARGE = "UPDATE patient SET discharge_date = ?, discharged_by = ? WHERE id = ?;";
+    
     /**
      * Inital insertio of Patient data without hospital bed or queue deatils
      * @param patient
@@ -133,6 +135,47 @@ public class PatientRepository {
             statement.setObject(2, admitDate);
             statement.setString(3, doctorUserName);
             statement.setString(4, patientId);
+            
+            System.out.println(statement);
+            result = statement.executeUpdate();
+
+        } catch (Exception exception) {
+            System.out.println(exception);
+        } finally {
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
+        }
+
+        // if insert into is successful return true
+        if (result > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    
+    /**
+     * Insert patient discharge details to Database
+     * @param patientId
+     * @param doctorUserName
+     * @param dischargeDate
+     * @return
+     */
+    public static boolean insertDischargeToDB(String patientId, String doctorUserName, Date dischargeDate) {
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        int result = 0;
+
+        try {
+
+            connection = DBConnectionPool.getInstance().getConnection();
+
+            statement = connection.prepareStatement(INSERT_PATIENT_DISCHARGE);
+            statement.setObject(1, dischargeDate);
+            statement.setString(2, doctorUserName);
+            statement.setString(3, patientId);
             
             System.out.println(statement);
             result = statement.executeUpdate();
