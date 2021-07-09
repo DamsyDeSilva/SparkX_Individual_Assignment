@@ -10,11 +10,15 @@ import com.sparkx.damsy.enums.Role;
 // import com.sparkx.damsy.connections.Database;
 import com.sparkx.damsy.models.User;
 
+import org.apache.log4j.Logger;
+
 public class UserRepository {
 
     private static String SQL_INSERT_QUERY = "Insert into user(username,password,first_name,last_name,hospital_id,role) values(?,?,?,?,?,?)";
     private static String LOGIN_VALIDATE_QUERY = "SELECT Count(*) as count, role FROM user WHERE username=? and password=? ";
     private static String GET_USER_BY_USERNAME_QUERY = "SELECT * FROM user WHERE username=? LIMIT 1";
+
+    static Logger logger = Logger.getLogger(UserRepository.class);
 
     /**
      * Register User in Database
@@ -43,6 +47,7 @@ public class UserRepository {
             result = statement.executeUpdate();
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally
@@ -87,6 +92,7 @@ public class UserRepository {
             count = resultSet.getInt("count");
             
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally
@@ -138,6 +144,7 @@ public class UserRepository {
             return user;
             
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally

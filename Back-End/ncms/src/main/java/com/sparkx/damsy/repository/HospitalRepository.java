@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import com.sparkx.damsy.connections.DBConnectionPool;
 import com.sparkx.damsy.models.Hospital;
 
+import org.apache.log4j.Logger;
+
 public class HospitalRepository {
 
     private static String GET_HOSPITAL_BY_ID_QUERY = "SELECT * FROM hospital WHERE id = ? LIMIT 1";
@@ -17,6 +19,8 @@ public class HospitalRepository {
     private static String GET_ALL_HOSPITALS_QUERY = "SELECT * FROM hospital";
     private static String GET_AVAILABLE_BEDS = "SELECT avail_beds from hospital where id = ?";
     private static String UPDATE_AVAIL_BEDS_QUERY = "UPDATE hospital SET avail_beds = ? WHERE id = ?";
+
+    static Logger logger = Logger.getLogger(HospitalRepository.class);
 
     /**
      * load hospital data fro database according to hospital id
@@ -46,7 +50,8 @@ public class HospitalRepository {
 
             return hospital;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            // e.printStackTrace();
         } finally {
             DBConnectionPool.getInstance().close(resultSet);
             DBConnectionPool.getInstance().close(connection);
@@ -85,6 +90,7 @@ public class HospitalRepository {
             result = statement.executeUpdate();
             
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally
@@ -164,6 +170,7 @@ public class HospitalRepository {
             }
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally
@@ -196,6 +203,7 @@ public class HospitalRepository {
             bedNo = 11 - resultSet.getInt(1);   // result is available beds count
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally
@@ -231,6 +239,7 @@ public class HospitalRepository {
             result = statement.executeUpdate();
             
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally

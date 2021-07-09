@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import com.sparkx.damsy.models.Patient;
 import com.sparkx.damsy.models.PatientQueue;
 
+import org.apache.log4j.Logger;
+
 import com.sparkx.damsy.connections.DBConnectionPool;
 
 public class QueueRepository {
@@ -15,6 +17,7 @@ public class QueueRepository {
     private static String INSERT_PATIENT_QUERY = "INSERT INTO patient(id, first_name, last_name, district, location_x, location_y, gender, contact, email, age) values(?,?,?,?,?,?,?,?,?,?);";
     private static String INSERT_QUEUE_QUERY = "INSERT INTO patient_queue(id, patient_id) values(?,?)";
     
+    static Logger logger = Logger.getLogger(QueueRepository.class);
     
     public static int getCountQueue(){
         
@@ -32,6 +35,7 @@ public class QueueRepository {
             count = resultSet.getInt(1);
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally
@@ -79,6 +83,7 @@ public class QueueRepository {
             queueResult = queueStatement.executeUpdate();
             
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         }
         finally

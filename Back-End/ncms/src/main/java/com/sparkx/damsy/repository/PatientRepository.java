@@ -7,6 +7,8 @@ import java.util.Date;
 import com.sparkx.damsy.connections.DBConnectionPool;
 import com.sparkx.damsy.models.Patient;
 
+import org.apache.log4j.Logger;
+
 public class PatientRepository {
 
     private static String INSERT_PATIENT_WITH_HOSP_BED_QUERY = "INSERT INTO patient(id, first_name, last_name, district, location_x, location_y, gender, contact, email, age, hospital_id, bed_no) values(?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -15,6 +17,8 @@ public class PatientRepository {
     private static String INSERT_PATIENT_ADDMISSION = "UPDATE patient SET severity_level = ?, admit_date = ?, admitted_by = ? WHERE id = ?;";
     private static String INSERT_PATIENT_DISCHARGE = "UPDATE patient SET discharge_date = ?, discharged_by = ? WHERE id = ?;";
     
+    static Logger logger = Logger.getLogger(PatientRepository.class);
+
     /**
      * Inital insertio of Patient data without hospital bed or queue deatils
      * @param patient
@@ -58,6 +62,7 @@ public class PatientRepository {
             hospitalResult = hospitalStatement.executeUpdate();
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         } finally {
             DBConnectionPool.getInstance().close(patientStatement);
@@ -97,6 +102,7 @@ public class PatientRepository {
             result = statement.executeUpdate();
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         } finally {
             DBConnectionPool.getInstance().close(statement);
@@ -140,6 +146,7 @@ public class PatientRepository {
             result = statement.executeUpdate();
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         } finally {
             DBConnectionPool.getInstance().close(statement);
@@ -181,6 +188,7 @@ public class PatientRepository {
             result = statement.executeUpdate();
 
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             System.out.println(exception);
         } finally {
             DBConnectionPool.getInstance().close(statement);
