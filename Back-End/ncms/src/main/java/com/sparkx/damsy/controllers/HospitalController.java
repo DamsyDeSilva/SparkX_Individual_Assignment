@@ -3,6 +3,7 @@ package com.sparkx.damsy.controllers;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -23,11 +24,18 @@ public class HospitalController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        // if no hospital is specified --> send all hospitals
         if (req.getParameter("id").isEmpty()) {
-            Http.outputResponse(resp, "Hospital Id is required", HttpServletResponse.SC_FORBIDDEN);
-            return;
+            ArrayList<Hospital> hospitalList = HospitalRepository.getHospitalList();
+            if(hospitalList != null){
+                Http.outputResponse(resp, JsonFunctions.jsonSerialize(hospitalList), HttpServletResponse.SC_OK);
+                return;
+            }else{
+                Http.outputResponse(resp, "Server Error", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return;
+            }
         }
-
+        // else send the required hospital data
         Hospital hospital = HospitalRepository.loadHospitalFromDB(req.getParameter("id"));
         if (hospital.getName() != null) {
             Http.outputResponse(resp, JsonFunctions.jsonSerialize(hospital), HttpServletResponse.SC_OK);
