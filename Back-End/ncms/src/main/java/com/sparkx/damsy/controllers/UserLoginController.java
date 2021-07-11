@@ -49,6 +49,7 @@ public class UserLoginController extends HttpServlet {
             String token = AuthService.createToken(user);
             
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("status", "SUCCESS_LOGIN");
             jsonObject.addProperty("token", token);
             jsonObject.addProperty("username", user.getUserName());
             jsonObject.addProperty("role", userRole.toString());
@@ -58,7 +59,9 @@ public class UserLoginController extends HttpServlet {
             // Http.outputResponse(resp, token, HttpServletResponse.SC_OK);
             // return;
         }else{
-            Http.outputResponse(resp, "Invalid login", HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("status", "FAILED_LOGIN");
+            Http.outputResponse(resp, JsonFunctions.jsonSerialize(jsonObject), HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
