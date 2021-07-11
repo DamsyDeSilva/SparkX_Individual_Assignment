@@ -18,7 +18,7 @@ import com.sparkx.damsy.repository.PatientRepository;
 import com.sparkx.damsy.repository.UserRepository;
 import com.sparkx.damsy.utils.Http;
 
-@WebServlet(name = "patientDischarge", value = "/patient/discharge")
+@WebServlet(name = "patientDischarge", value = "/doctor/discharge")
 public class PatientDischargeController extends HttpServlet{
 
     @Override

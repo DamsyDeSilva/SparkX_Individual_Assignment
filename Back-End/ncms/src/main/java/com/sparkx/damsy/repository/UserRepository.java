@@ -70,12 +70,13 @@ public class UserRepository {
      * @param password
      * @return
      */
-    public static boolean validateUserLogin(String username, String password) {
+    public static Role validateUserLogin(String username, String password) {
 
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         int count = 0;
+        Role role = null;
 
         try {
             
@@ -90,6 +91,7 @@ public class UserRepository {
             resultSet = statement.executeQuery();
             resultSet.next();
             count = resultSet.getInt("count");
+            role = Role.valueOf(resultSet.getString("role")); 
             
         } catch (Exception exception) {
             logger.error(exception.getMessage());
@@ -103,9 +105,9 @@ public class UserRepository {
 
         // count = 1 when there exist only one matching pair of username and password 
         if (count == 1){
-            return true;
+            return role;
         }else{
-            return false;
+            return null;
         }
     }
 
