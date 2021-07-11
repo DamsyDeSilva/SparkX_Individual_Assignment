@@ -2,6 +2,7 @@ package com.sparkx.damsy.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.sparkx.damsy.models.Hospital;
@@ -16,9 +17,9 @@ public class PatientService {
      * @param patient
      * @return
      */
-    public static String getAvailbleHospital(Patient patient) {
-
-        HashMap<String, Double> hospitalDistHashMap = new HashMap<String, Double>();
+    public static Map<String,String> getAvailbleHospital(Patient patient) {
+        // Pair<Integer, String>
+        HashMap<Hospital, Double> hospitalDistHashMap = new HashMap<Hospital, Double>();
         ArrayList<Hospital> hospitalList = HospitalRepository.getHospitalList();
         
         for (int i = 0; i < hospitalList.size(); i++) {
@@ -26,25 +27,32 @@ public class PatientService {
 
             if (hospital.getAvailBeds() > 0) {
                 double distance = HospitalService.getDistanceToPatient(hospital, patient);
-                System.out.println(hospital.getId()+": "+distance + " ---" + hospital.getLocationX() + " ," + hospital.getLocationY());
-                hospitalDistHashMap.put(hospital.getId(), distance);
+                // System.out.println(hospital.getId()+": "+distance + " ---" + hospital.getLocationX() + " ," + hospital.getLocationY());
+                hospitalDistHashMap.put(hospital, distance);
             }
         }
+
+        Map<String, String> result = new HashMap<>();
 
         if(hospitalDistHashMap.size() == 0){
-            return "NO BEDS ARE AVAILABLE";
-        }
+            result.put("status","NO BEDS ARE AVAILABLE");
+            // return "NO BEDS ARE AVAILABLE";
+        }else{
+            result.put("status","BED_AVAILABLE");
+            // String returnHospitalId;
 
-        String returnHospitalId;
-
-        Entry<String, Double> min = null;
-        for (Entry<String, Double> entry : hospitalDistHashMap.entrySet()) {
-            if (min == null || min.getValue() > entry.getValue()) {
-                min = entry;
+            Entry<Hospital, Double> min = null;
+            for (Entry<Hospital, Double> entry : hospitalDistHashMap.entrySet()) {
+                if (min == null || min.getValue() > entry.getValue()) {
+                    min = entry;
+                }
             }
+            // returnHospitalId = min.getKey().getId();
+            result.put("hospitalId",min.getKey().getId());
+            result.put("hospitalName",min.getKey().getName());
         }
-        returnHospitalId = min.getKey();
-  
-        return returnHospitalId;
+
+        return result;
+        // return returnHospitalId;
     }
 }

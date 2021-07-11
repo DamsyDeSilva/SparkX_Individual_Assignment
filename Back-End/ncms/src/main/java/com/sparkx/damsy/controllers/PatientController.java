@@ -2,6 +2,7 @@ package com.sparkx.damsy.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -52,9 +53,10 @@ public class PatientController extends HttpServlet {
         if (!patient.getFirstName().isEmpty() && patient.getLocationX() != 0 && patient.getLocationY() != 0) {
             
             // search for a hospital
-            String hospital_id = PatientService.getAvailbleHospital(patient);
+            // Map<String, String> result = new HashMap<>();
+            Map<String, String> result  = PatientService.getAvailbleHospital(patient);
             
-            if(hospital_id.equals("NO BEDS ARE AVAILABLE")){
+            if(result.get("status").equals("NO BEDS ARE AVAILABLE")){
                 // --> add to queue 
                 int nextQueueId = QueueRepository.getCountQueue() + 1;
                 PatientQueue queue = new PatientQueue(nextQueueId, patient.getId());
@@ -72,7 +74,8 @@ public class PatientController extends HttpServlet {
                 Http.outputResponse(resp, "Queue Insertion failed, no hospital allocated", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 return;
             }
-
+            String hospital_id = result.get("hospitalId");
+            String hospital_name = result.get("hospitalName");
             // search for the bed no
             int allocatedBedNo = HospitalRepository.getAvailabelBedNo(hospital_id);
             if(allocatedBedNo > 0){
@@ -91,7 +94,8 @@ public class PatientController extends HttpServlet {
                 jsonObject.addProperty("status", "BED_ALLOCATED");
                 jsonObject.addProperty("patientName", (patient.getFirstName()+" "+patient.getLastName()));
                 jsonObject.addProperty("SerialId", patient.getId());
-                jsonObject.addProperty("hospital", patient.getHospitalId());
+                jsonObject.addProperty("hospitalID", patient.getHospitalId());
+                jsonObject.addProperty("hospitalName", hospital_name);
                 jsonObject.addProperty("bedNumber", patient.getBedNo()); 
 
                 Http.outputResponse(resp, JsonFunctions.jsonSerialize(jsonObject), HttpServletResponse.SC_CREATED);
