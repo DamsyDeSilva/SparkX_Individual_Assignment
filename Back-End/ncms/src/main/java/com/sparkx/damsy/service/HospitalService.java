@@ -15,7 +15,7 @@ public class HospitalService {
     public static double getDistanceToPatient(Hospital hospital, Patient patient) {
 
         int xDiff = Math.abs(hospital.getLocationX() - patient.getLocationX());
-        int yDiff = Math.abs(hospital.getLocationX() - patient.getLocationX());
+        int yDiff = Math.abs(hospital.getLocationY() - patient.getLocationY());
 
         double distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 

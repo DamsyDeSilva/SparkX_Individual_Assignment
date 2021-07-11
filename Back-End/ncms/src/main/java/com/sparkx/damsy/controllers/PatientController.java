@@ -61,6 +61,7 @@ public class PatientController extends HttpServlet {
                 if(QueueRepository.insertIntoQueue(queue, patient)){
                     // data to be send to patient
                     JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("Status", "WATING_IN_QUEUE");
                     jsonObject.addProperty("SerialId", patient.getId());
                     jsonObject.addProperty("QueueNumber", queue.getId());
 
@@ -68,7 +69,7 @@ public class PatientController extends HttpServlet {
                     return;
                 }
 
-                Http.outputResponse(resp, "Queue Insertion failed, no hospital allocated", HttpServletResponse.SC_OK);
+                Http.outputResponse(resp, "Queue Insertion failed, no hospital allocated", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 return;
             }
 
@@ -87,6 +88,8 @@ public class PatientController extends HttpServlet {
                             
                 // data to be send to patient
                 JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("status", "BED_ALLOCATED");
+                jsonObject.addProperty("patientName", (patient.getFirstName()+" "+patient.getLastName()));
                 jsonObject.addProperty("SerialId", patient.getId());
                 jsonObject.addProperty("hospital", patient.getHospitalId());
                 jsonObject.addProperty("bedNumber", patient.getBedNo()); 

@@ -26,6 +26,7 @@ public class PatientService {
 
             if (hospital.getAvailBeds() > 0) {
                 double distance = HospitalService.getDistanceToPatient(hospital, patient);
+                System.out.println(hospital.getId()+": "+distance + " ---" + hospital.getLocationX() + " ," + hospital.getLocationY());
                 hospitalDistHashMap.put(hospital.getId(), distance);
             }
         }
