@@ -3,6 +3,7 @@ package com.sparkx.damsy.controllers;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,27 +23,52 @@ public class StatController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
-        Map<String, Integer> districtStatMap  = StatRepository.getDistrictStatsFromDB();
-        int countlyLevelCount = StatRepository.getAllPatientCountFromDB();
-        int dailyCount = 0;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            dailyCount = StatRepository.getDailyPatientCountFromDB(formatter.parse(formatter.format(new Date())));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (req.getParameter("type") == null) {
+            Http.outputResponse(resp, "Stat-Type is required", HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        String statType = req.getParameter("type");
+
+        if (statType.equals("district")) {
+            Map<String, Integer> districtStatMap = StatRepository.getDistrictStatsFromDB();
+            ArrayList<JsonObject> ditrictJsonDataList = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : districtStatMap.entrySet()) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("district", entry.getKey());
+                jsonObject.addProperty("count", entry.getValue());
+                ditrictJsonDataList.add(jsonObject);
+            }
+
+            Http.outputResponse(resp, JsonFunctions.jsonSerialize(ditrictJsonDataList), HttpServletResponse.SC_OK);
+            return;
+
+        } else if (statType.equals("country")) {
+            int countlyLevelCount = StatRepository.getAllPatientCountFromDB();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("count", String.valueOf(countlyLevelCount));
+
+            Http.outputResponse(resp, JsonFunctions.jsonSerialize(jsonObject), HttpServletResponse.SC_OK);
+            return;
+
+        } else if (statType.equals("daily")) {
+            int dailyCount = 0;
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                dailyCount = StatRepository.getDailyPatientCountFromDB(formatter.parse(formatter.format(new Date())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("count", String.valueOf(dailyCount));
+
+            Http.outputResponse(resp, JsonFunctions.jsonSerialize(jsonObject), HttpServletResponse.SC_OK);
+            return;
+
         }
 
-        String districtJsonString = JsonFunctions.jsonSerialize(districtStatMap);
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("DistrictLevel", districtJsonString);
-        jsonObject.addProperty("CountryLevel", String.valueOf(countlyLevelCount));
-        jsonObject.addProperty("DailyCount", String.valueOf(dailyCount));
-        
-
-        Http.outputResponse(resp, JsonFunctions.jsonSerialize(jsonObject), HttpServletResponse.SC_OK);
+        Http.outputResponse(resp, "Invalid Stat-Type ", HttpServletResponse.SC_BAD_REQUEST);
         return;
 
     }
