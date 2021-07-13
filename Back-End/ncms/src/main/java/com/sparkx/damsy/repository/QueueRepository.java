@@ -3,6 +3,7 @@ package com.sparkx.damsy.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import com.sparkx.damsy.models.Patient;
 import com.sparkx.damsy.models.PatientQueue;
@@ -16,6 +17,7 @@ public class QueueRepository {
     private static String COUNT_ALL_QUEUE_QUERY = "SELECT COUNT(*) FROM patient_queue";
     private static String INSERT_PATIENT_QUERY = "INSERT INTO patient(id, first_name, last_name, district, location_x, location_y, gender, contact, email, age) values(?,?,?,?,?,?,?,?,?,?);";
     private static String INSERT_QUEUE_QUERY = "INSERT INTO patient_queue(id, patient_id) values(?,?)";
+    private static String GET_ALL_QUEUE_QUERY = "SELECT * FROM patient_queue;";
     
     static Logger logger = Logger.getLogger(QueueRepository.class);
     
@@ -100,4 +102,38 @@ public class QueueRepository {
             return false;
         }
     }
+
+
+
+    public static ArrayList<PatientQueue> getPatientsInQueue(){
+        
+        ResultSet resultSet = null;
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        ArrayList<PatientQueue> patientQueueList = new ArrayList<PatientQueue>();
+
+        try {
+            connection = DBConnectionPool.getInstance().getConnection();
+            statement = connection.prepareStatement(GET_ALL_QUEUE_QUERY);
+            resultSet = statement.executeQuery();
+
+            PatientQueue patientQueue;
+            while (resultSet.next()) {
+                patientQueue = new PatientQueue(resultSet.getInt("id"), resultSet.getString("patient_id"));
+                patientQueueList.add(patientQueue);
+            }
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+            System.out.println(exception);
+        }
+        finally
+        {
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
+        }
+
+        return patientQueueList;
+    } 
 }
