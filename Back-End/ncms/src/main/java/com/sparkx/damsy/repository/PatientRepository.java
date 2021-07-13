@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.sparkx.damsy.connections.DBConnectionPool;
+import com.sparkx.damsy.enums.SeverityLevel;
 import com.sparkx.damsy.models.Patient;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ public class PatientRepository {
     private static String INSERT_PATIENT_ADDMISSION = "UPDATE patient SET severity_level = ?, admit_date = ?, admitted_by = ? WHERE id = ?;";
     private static String INSERT_PATIENT_DISCHARGE = "UPDATE patient SET discharge_date = ?, discharged_by = ? WHERE id = ?;";
     private static String GET_PATIENTS_TOBE_ADMITTED = "SELECT * FROM patient  WHERE admit_date is null;";
+    private static String GET_PATIENTS_TOBE_DISCHARGE = "SELECT * FROM patient  WHERE discharge_date is null and admit_date is not null;";
 
     static Logger logger = Logger.getLogger(PatientRepository.class);
 
@@ -250,4 +252,51 @@ public class PatientRepository {
 
         return patientAdmitList;
     } 
+
+
+    /**
+     * 
+     * @return
+     */
+    public static ArrayList<Patient> getPatientsToBeDischarged(){
+        
+        ResultSet resultSet = null;
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        ArrayList<Patient> patientDischargeList = new ArrayList<Patient>();
+
+        try {
+            connection = DBConnectionPool.getInstance().getConnection();
+            statement = connection.prepareStatement(GET_PATIENTS_TOBE_DISCHARGE);
+            resultSet = statement.executeQuery();
+
+            Patient patient;
+            while (resultSet.next()) {
+                patient = new Patient(resultSet.getString("id"));
+                patient.setFirstName(resultSet.getString("first_name"));
+                patient.setLastName(resultSet.getString("last_name"));
+                patient.setDistrict(resultSet.getString("district"));
+                patient.setLocationX(resultSet.getInt("location_x"));
+                patient.setLocationY(resultSet.getInt("location_y"));
+                patient.setGender(resultSet.getString("gender"));
+                patient.setHospitalId(resultSet.getString("hospital_id"));
+                patient.setSeverityLevel(SeverityLevel.valueOf(resultSet.getString("severity_level")));
+                patient.setBedNo(resultSet.getInt("bed_no"));
+                patient.setAdmitDate(resultSet.getDate("admit_date"));
+                patientDischargeList.add(patient);
+            }
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+            System.out.println(exception);
+        }
+        finally
+        {
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
+        }
+
+        return patientDischargeList;
+    }
 }
