@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.sparkx.damsy.service.AuthService;
 import com.sparkx.damsy.utils.Http;
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/hospital", "/doctor" })
+@WebFilter(filterName = "AuthFilter", urlPatterns = {"/hospital", "/doctor/admits" })
 public class AuthFilter implements Filter {
 
 
