@@ -2,6 +2,8 @@ package com.sparkx.damsy.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.sparkx.damsy.connections.DBConnectionPool;
@@ -16,7 +18,8 @@ public class PatientRepository {
     private static String DECREMENT_OF_AVAIL_BEDS_QUERY = "UPDATE hospital SET avail_beds = avail_beds-1 WHERE id = ? AND avail_beds > 0;";
     private static String INSERT_PATIENT_ADDMISSION = "UPDATE patient SET severity_level = ?, admit_date = ?, admitted_by = ? WHERE id = ?;";
     private static String INSERT_PATIENT_DISCHARGE = "UPDATE patient SET discharge_date = ?, discharged_by = ? WHERE id = ?;";
-    
+    private static String GET_PATIENTS_TOBE_ADMITTED = "SELECT * FROM patient  WHERE admit_date is null;";
+
     static Logger logger = Logger.getLogger(PatientRepository.class);
 
     /**
@@ -203,4 +206,48 @@ public class PatientRepository {
         }
     }
 
+
+    /**
+     * 
+     * @return
+     */
+    public static ArrayList<Patient> getPatientsToBeAdmitted(){
+        
+        ResultSet resultSet = null;
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        ArrayList<Patient> patientAdmitList = new ArrayList<Patient>();
+
+        try {
+            connection = DBConnectionPool.getInstance().getConnection();
+            statement = connection.prepareStatement(GET_PATIENTS_TOBE_ADMITTED);
+            resultSet = statement.executeQuery();
+
+            Patient patient;
+            while (resultSet.next()) {
+                patient = new Patient(resultSet.getString("id"));
+                patient.setFirstName(resultSet.getString("first_name"));
+                patient.setLastName(resultSet.getString("last_name"));
+                patient.setDistrict(resultSet.getString("district"));
+                patient.setLocationX(resultSet.getInt("location_x"));
+                patient.setLocationY(resultSet.getInt("location_y"));
+                patient.setGender(resultSet.getString("gender"));
+                patient.setHospitalId(resultSet.getString("hospital_id"));
+                patient.setBedNo(resultSet.getInt("bed_no"));
+                patientAdmitList.add(patient);
+            }
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+            System.out.println(exception);
+        }
+        finally
+        {
+            DBConnectionPool.getInstance().close(statement);
+            DBConnectionPool.getInstance().close(connection);
+        }
+
+        return patientAdmitList;
+    } 
 }
