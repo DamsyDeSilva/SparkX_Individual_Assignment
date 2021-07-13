@@ -28,7 +28,13 @@
 
   <filter-mapping>
     <filter-name>AuthFilter</filter-name>
-    <url-pattern>/doctor</url-pattern>
+    <url-pattern>/register</url-pattern>
+    <!-- <url-pattern>/doctor</url-pattern> -->
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>/doctor/*</url-pattern>
     <!-- <url-pattern>/doctor</url-pattern> -->
   </filter-mapping>
   
