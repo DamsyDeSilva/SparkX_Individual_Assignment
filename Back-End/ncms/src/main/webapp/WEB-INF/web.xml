@@ -32,11 +32,11 @@
     <!-- <url-pattern>/doctor</url-pattern> -->
   </filter-mapping>
 
-  <filter-mapping>
+  <!-- <filter-mapping>
     <filter-name>AuthFilter</filter-name>
     <url-pattern>/doctor/*</url-pattern>
-    <!-- <url-pattern>/doctor</url-pattern> -->
-  </filter-mapping>
+    <url-pattern>/doctor</url-pattern> 
+  </filter-mapping> -->
   
   <servlet>
     <servlet-name>UserRegisterController</servlet-name>
